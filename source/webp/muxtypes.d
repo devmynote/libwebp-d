@@ -48,7 +48,7 @@ enum WebPMuxAnimBlend
 // 'bytes' memory must be allocated using WebPMalloc() and such.
 struct WebPData
 {
-    in ubyte* bytes;
+    const(ubyte)* bytes;
     size_t size;
 }
 

@@ -217,7 +217,7 @@ struct WebPAuxStats {
 // data/data_size is the segment of data to write, and 'picture' is for
 // reference (and so one can make use of picture->custom_ptr).
 alias WebPWriterFunction = int function(in ubyte* data, size_t data_size,
-                                        int WebPPicture* picture);
+                                        in WebPPicture* picture);
 
 // WebPMemoryWrite: a special WebPWriterFunction that writes to memory using
 // the following WebPMemoryWriter object (to be set as a custom_ptr).
