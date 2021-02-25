@@ -1,5 +1,6 @@
 module webp.mux;
 
+import std.typecons;
 import webp.encode;
 import webp.muxtypes;
 
@@ -58,11 +59,7 @@ enum WEBP_MUX_ABI_VERSION = 0x0108; // MAJOR(8b) + MINOR(8b)
   WebPFree(data);
 */
 
-// Note: forward declaring enumerations is not allowed in (strict) C and C++,
-// the types are left here for reference.
-// typedef enum WebPMuxError WebPMuxError;
-// typedef enum WebPChunkId WebPChunkId;
-struct WebPMux; // main opaque object.
+alias WebPMux = Typedef!(void*);
 
 // Error codes
 enum WebPMuxError
@@ -107,7 +104,9 @@ WebPMux* WebPNewInternal(int);
 // Returns:
 //   A pointer to the newly created empty mux object.
 //   Or NULL in case of memory error.
-WebPMux* WebPMuxNew();
+WebPMux* WebPMuxNew() {
+  return WebPNewInternal(WEBP_MUX_ABI_VERSION);
+}
 
 // Deletes the mux object.
 // Parameters:
@@ -128,7 +127,9 @@ WebPMux* WebPMuxCreateInternal(in WebPData*, int, int);
 // Returns:
 //   A pointer to the mux object created from given data - on success.
 //   NULL - In case of invalid data or memory error.
-WebPMux* WebPMuxCreate(in WebPData* bitstream, int copy_data);
+WebPMux* WebPMuxCreate(in WebPData* bitstream, int copy_data) {
+  return WebPMuxCreateInternal(bitstream, copy_data, WEBP_MUX_ABI_VERSION);
+}
 
 //------------------------------------------------------------------------------
 // Non-image chunks.
@@ -430,7 +431,9 @@ int WebPAnimEncoderOptionsInitInternal(WebPAnimEncoderOptions*, int);
 // structure before modification. Returns false in case of version mismatch.
 // WebPAnimEncoderOptionsInit() must have succeeded before using the
 // 'enc_options' object.
-int WebPAnimEncoderOptionsInit(WebPAnimEncoderOptions* enc_options);
+int WebPAnimEncoderOptionsInit(WebPAnimEncoderOptions* enc_options) {
+  return WebPAnimEncoderOptionsInitInternal(enc_options, WEBP_MUX_ABI_VERSION);
+}
 
 // Internal, version-checked, entry point.
 WebPAnimEncoder* WebPAnimEncoderNewInternal(int, int, in WebPAnimEncoderOptions*, int);
@@ -444,7 +447,10 @@ WebPAnimEncoder* WebPAnimEncoderNewInternal(int, int, in WebPAnimEncoderOptions*
 //   A pointer to the newly created WebPAnimEncoder object.
 //   Or NULL in case of memory error.
 WebPAnimEncoder* WebPAnimEncoderNew(int width, int height,
-        in WebPAnimEncoderOptions* enc_options);
+        in WebPAnimEncoderOptions* enc_options) {
+  return WebPAnimEncoderNewInternal(width, height, enc_options,
+                                    WEBP_MUX_ABI_VERSION);
+}
 
 // Optimize the given frame for WebP, encode it and add it to the
 // WebPAnimEncoder object.

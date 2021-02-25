@@ -1,5 +1,8 @@
 module webp.muxtypes;
 
+import core.stdc.string;
+import webp.types;
+
 // Copyright 2012 Google Inc. All Rights Reserved.
 //
 // Use of this source code is governed by a BSD-style license
@@ -53,12 +56,31 @@ struct WebPData
 }
 
 // Initializes the contents of the 'webp_data' object with default values.
-void WebPDataInit(WebPData* webp_data);
+void WebPDataInit(WebPData* webp_data) {
+  if (webp_data != null) {
+    memset(webp_data, 0, WebPData.sizeof);
+  }
+}
 
 // Clears the contents of the 'webp_data' object by calling WebPFree().
 // Does not deallocate the object itself.
-void WebPDataClear(WebPData* webp_data);
+void WebPDataClear(WebPData* webp_data) {
+  if (webp_data != null) {
+    WebPFree(cast(void*)webp_data.bytes);
+    WebPDataInit(webp_data);
+  }
+}
 
 // Allocates necessary storage for 'dst' and copies the contents of 'src'.
 // Returns true on success.
-int WebPDataCopy(in WebPData* src, WebPData* dst);
+int WebPDataCopy(in WebPData* src, WebPData* dst) {
+  if (src == null || dst == null) return 0;
+  WebPDataInit(dst);
+  if (src.bytes != null && src.size != 0) {
+    dst.bytes = cast(ubyte*)WebPMalloc(src.size);
+    if (dst.bytes == null) return 0;
+    memcpy(cast(void*)dst.bytes, src.bytes, src.size);
+    dst.size = src.size;
+  }
+  return 1;
+}

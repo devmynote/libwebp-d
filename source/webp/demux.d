@@ -1,5 +1,6 @@
 module webp.demux;
 
+import std.typecons;
 import webp.decode;
 import webp.muxtypes;
 
@@ -56,11 +57,7 @@ extern (C):
 
 enum WEBP_DEMUX_ABI_VERSION = 0x0107; // MAJOR(8b) + MINOR(8b)
 
-// Note: forward declaring enumerations is not allowed in (strict) C and C++,
-// the types are left here for reference.
-// typedef enum WebPDemuxState WebPDemuxState;
-// typedef enum WebPFormatFeature WebPFormatFeature;
-struct WebPDemuxer;
+alias WebPDemuxer = Typedef!(void*);
 
 //------------------------------------------------------------------------------
 
@@ -86,7 +83,9 @@ WebPDemuxer* WebPDemuxInternal(in WebPData*, int, WebPDemuxState*, int);
 // Parses the full WebP file given by 'data'. For single images the WebP file
 // header alone or the file header and the chunk header may be absent.
 // Returns a WebPDemuxer object on successful parse, NULL otherwise.
-WebPDemuxer* WebPDemux(in WebPData* data);
+WebPDemuxer* WebPDemux(in WebPData* data) {
+  return WebPDemuxInternal(data, 0, null, WEBP_DEMUX_ABI_VERSION);
+}
 
 // Parses the possibly incomplete WebP file given by 'data'.
 // If 'state' is non-NULL it will be set to indicate the status of the demuxer.
@@ -96,7 +95,9 @@ WebPDemuxer* WebPDemux(in WebPData* data);
 // If this data is volatile, the demuxer object should be deleted (by calling
 // WebPDemuxDelete()) and WebPDemuxPartial() called again on the new data.
 // This is usually an inexpensive operation.
-WebPDemuxer* WebPDemuxPartial(in WebPData* data, WebPDemuxState* state);
+WebPDemuxer* WebPDemuxPartial(in WebPData* data, WebPDemuxState* state) {
+  return WebPDemuxInternal(data, 1, state, WEBP_DEMUX_ABI_VERSION);
+}
 
 // Frees memory associated with 'dmux'.
 void WebPDemuxDelete(WebPDemuxer* dmux);
@@ -256,7 +257,10 @@ int WebPAnimDecoderOptionsInitInternal(WebPAnimDecoderOptions*, int);
 // structure before modification. Returns false in case of version mismatch.
 // WebPAnimDecoderOptionsInit() must have succeeded before using the
 // 'dec_options' object.
-int WebPAnimDecoderOptionsInit(WebPAnimDecoderOptions* dec_options);
+int WebPAnimDecoderOptionsInit(WebPAnimDecoderOptions* dec_options) {
+  return WebPAnimDecoderOptionsInitInternal(dec_options,
+                                            WEBP_DEMUX_ABI_VERSION);
+}
 
 // Internal, version-checked, entry point.
 WebPAnimDecoder* WebPAnimDecoderNewInternal(in WebPData*, in WebPAnimDecoderOptions*, int);
@@ -272,7 +276,10 @@ WebPAnimDecoder* WebPAnimDecoderNewInternal(in WebPData*, in WebPAnimDecoderOpti
 //   A pointer to the newly created WebPAnimDecoder object, or NULL in case of
 //   parsing error, invalid option or memory error.
 WebPAnimDecoder* WebPAnimDecoderNew(in WebPData* webp_data,
-        in WebPAnimDecoderOptions* dec_options);
+        in WebPAnimDecoderOptions* dec_options) {
+  return WebPAnimDecoderNewInternal(webp_data, dec_options,
+                                    WEBP_DEMUX_ABI_VERSION);
+}
 
 // Global information about the animation..
 struct WebPAnimInfo
