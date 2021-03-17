@@ -6,7 +6,7 @@
 	"authors": [
 		"Lionello Lunesu"
 	],
-	"libs": ["webp"],
+	"libs": ["libwebp", "libwebpdemux", "libwebpmux"],
 	"targetType": "sourceLibrary",
 	"dependencies": {
 	}
