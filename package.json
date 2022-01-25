@@ -1,10 +1,10 @@
 {
-	"name": "libwebp",
+	"name": "libwebp-d",
 	"description": "D bindings for WebP",
 	"license": "BSD 3-clause",
-	"homepage": "https://github.com/lionello/libwebp",
+	"homepage": "https://github.com/devmynote/libwebp-d",
 	"authors": [
-		"Lionello Lunesu"
+		"devmynote"
 	],
 	"libs": ["libwebp", "libwebpdemux", "libwebpmux"],
 	"targetType": "sourceLibrary",
