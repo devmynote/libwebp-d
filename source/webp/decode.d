@@ -70,10 +70,11 @@ ubyte* WebPDecodeBGR(in ubyte* data, size_t data_size,
 // returned is the Y samples buffer. Upon return, *u and *v will point to
 // the U and V chroma data. These U and V buffers need NOT be passed to
 // WebPFree(), unlike the returned Y luma one. The dimension of the U and V
-// planes are both (*width + 1) / 2 and (*height + 1)/ 2.
+// planes are both (*width + 1) / 2 and (*height + 1) / 2.
 // Upon return, the Y buffer has a stride returned as '*stride', while U and V
 // have a common stride returned as '*uv_stride'.
-// Return NULL in case of error.
+// 'width' and 'height' may be NULL, the other pointers must not be.
+// Returns NULL in case of error.
 // (*) Also named Y'CbCr. See: https://en.wikipedia.org/wiki/YCbCr
 ubyte* WebPDecodeYUV(in ubyte* data, size_t data_size,
                      int* width, int* height,
@@ -173,7 +174,7 @@ struct WebPRGBABuffer {    // view as RGBA
   ubyte* rgba;    // pointer to RGBA samples
   int stride;       // stride in bytes from one scanline to the next.
   size_t size;      // total size of the *rgba buffer.
-};
+}
 
 struct WebPYUVABuffer {              // view as YUVA
   ubyte* y;
@@ -186,7 +187,7 @@ struct WebPYUVABuffer {              // view as YUVA
   size_t y_size;              // luma plane size
   size_t u_size, v_size;      // chroma planes size
   size_t a_size;              // alpha-plane size
-};
+}
 
 // Output buffer
 struct WebPDecBuffer {
@@ -196,13 +197,13 @@ struct WebPDecBuffer {
   union u {
     WebPRGBABuffer RGBA;
     WebPYUVABuffer YUVA;
-  };                         // Nameless union of buffer parameters.
+  }                          // Nameless union of buffer parameters.
   uint[4] pad;               // padding for later use
 
   ubyte* private_memory;     // Internally allocated memory (only when
                              // is_external_memory is 0). Should not be used
                              // externally, but accessed via the buffer union.
-};
+}
 
 // Internal, version-checked, entry point
 int WebPInitDecBufferInternal(WebPDecBuffer*, int);
@@ -405,7 +406,7 @@ struct WebPBitstreamFeatures {
   int has_animation;  // True if the bitstream is an animation.
   int format;         // 0 = undefined (/mixed), 1 = lossy, 2 = lossless
   uint[5] pad;        // padding for later use
-};
+}
 
 // Internal, version-checked, entry point
 VP8StatusCode WebPGetFeaturesInternal(
@@ -451,7 +452,7 @@ struct WebPDecoderConfig {
   WebPBitstreamFeatures input;  // Immutable bitstream features (optional)
   WebPDecBuffer output;         // Output buffer (can point to external mem)
   WebPDecoderOptions options;   // Decoding options
-};
+}
 
 // Internal, version-checked, entry point
 int WebPInitDecoderConfigInternal(WebPDecoderConfig*, int);

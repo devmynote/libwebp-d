@@ -422,7 +422,7 @@ int WebPPictureCrop(WebPPicture* picture,
 // the original dimension will be lost). Picture 'dst' need not be initialized
 // with WebPPictureInit() if it is different from 'src', since its content will
 // be overwritten.
-// Returns false in case of memory allocation error or invalid parameters.
+// Returns false in case of invalid parameters.
 int WebPPictureView(in WebPPicture* src,
                                  int left, int top, int width, int height,
                                  WebPPicture* dst);
@@ -436,7 +436,7 @@ int WebPPictureIsView(in WebPPicture* picture);
 // dimension will be calculated preserving the aspect ratio.
 // No gamma correction is applied.
 // Returns false in case of error (invalid parameter or insufficient memory).
-int WebPPictureRescale(WebPPicture* pic, int width, int height);
+int WebPPictureRescale(WebPPicture* picture, int width, int height);
 
 // Colorspace conversion function to import RGB samples.
 // Previous buffer will be free'd, if any.
@@ -507,7 +507,7 @@ int WebPPictureHasTransparency(in WebPPicture* picture);
 // Remove the transparency information (if present) by blending the color with
 // the background color 'background_rgb' (specified as 24bit RGB triplet).
 // After this call, all alpha values are reset to 0xff.
-void WebPBlendAlpha(WebPPicture* pic, uint background_rgb);
+void WebPBlendAlpha(WebPPicture* picture, uint background_rgb);
 
 //------------------------------------------------------------------------------
 // Main call
