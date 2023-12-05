@@ -117,7 +117,7 @@ void WebPMuxDelete(WebPMux* mux);
 // Mux creation.
 
 // Internal, version-checked, entry point
-WebPMux* WebPMuxCreateInternal(in WebPData*, int, int);
+WebPMux* WebPMuxCreateInternal(const WebPData*, int, int);
 
 // Creates a mux object from raw data given in WebP RIFF format.
 // Parameters:
@@ -127,7 +127,7 @@ WebPMux* WebPMuxCreateInternal(in WebPData*, int, int);
 // Returns:
 //   A pointer to the mux object created from given data - on success.
 //   NULL - In case of invalid data or memory error.
-WebPMux* WebPMuxCreate(in WebPData* bitstream, int copy_data) {
+WebPMux* WebPMuxCreate(const WebPData* bitstream, int copy_data) {
   return WebPMuxCreateInternal(bitstream, copy_data, WEBP_MUX_ABI_VERSION);
 }
 
@@ -153,8 +153,8 @@ WebPMux* WebPMuxCreate(in WebPData* bitstream, int copy_data) {
 //                               or if fourcc corresponds to an image chunk.
 //   WEBP_MUX_MEMORY_ERROR - on memory allocation error.
 //   WEBP_MUX_OK - on success.
-WebPMuxError WebPMuxSetChunk(WebPMux* mux, in char* fourcc,
-        in WebPData* chunk_data, int copy_data);
+WebPMuxError WebPMuxSetChunk(WebPMux* mux, const char* fourcc,
+        const WebPData* chunk_data, int copy_data);
 
 // Gets a reference to the data of the chunk with id 'fourcc' in the mux object.
 // The caller should NOT free the returned data.
@@ -168,7 +168,7 @@ WebPMuxError WebPMuxSetChunk(WebPMux* mux, in char* fourcc,
 //                               or if fourcc corresponds to an image chunk.
 //   WEBP_MUX_NOT_FOUND - If mux does not contain a chunk with the given id.
 //   WEBP_MUX_OK - on success.
-WebPMuxError WebPMuxGetChunk(in WebPMux* mux, in char* fourcc, WebPData* chunk_data);
+WebPMuxError WebPMuxGetChunk(const WebPMux* mux, const char* fourcc, WebPData* chunk_data);
 
 // Deletes the chunk with the given 'fourcc' from the mux object.
 // Parameters:
@@ -180,7 +180,7 @@ WebPMuxError WebPMuxGetChunk(in WebPMux* mux, in char* fourcc, WebPData* chunk_d
 //                               or if fourcc corresponds to an image chunk.
 //   WEBP_MUX_NOT_FOUND - If mux does not contain a chunk with the given fourcc.
 //   WEBP_MUX_OK - on success.
-WebPMuxError WebPMuxDeleteChunk(WebPMux* mux, in char* fourcc);
+WebPMuxError WebPMuxDeleteChunk(WebPMux* mux, const char* fourcc);
 
 //------------------------------------------------------------------------------
 // Images.
@@ -213,7 +213,7 @@ struct WebPMuxFrameInfo
 //   WEBP_MUX_INVALID_ARGUMENT - if mux is NULL or bitstream is NULL.
 //   WEBP_MUX_MEMORY_ERROR - on memory allocation error.
 //   WEBP_MUX_OK - on success.
-WebPMuxError WebPMuxSetImage(WebPMux* mux, in WebPData* bitstream, int copy_data);
+WebPMuxError WebPMuxSetImage(WebPMux* mux, const WebPData* bitstream, int copy_data);
 
 // Adds a frame at the end of the mux object.
 // Notes: (1) frame.id should be WEBP_CHUNK_ANMF
@@ -231,7 +231,7 @@ WebPMuxError WebPMuxSetImage(WebPMux* mux, in WebPData* bitstream, int copy_data
 //                               or if content of 'frame' is invalid.
 //   WEBP_MUX_MEMORY_ERROR - on memory allocation error.
 //   WEBP_MUX_OK - on success.
-WebPMuxError WebPMuxPushFrame(WebPMux* mux, in WebPMuxFrameInfo* frame, int copy_data);
+WebPMuxError WebPMuxPushFrame(WebPMux* mux, const WebPMuxFrameInfo* frame, int copy_data);
 
 // Gets the nth frame from the mux object.
 // The content of 'frame->bitstream' is allocated using WebPMalloc(), and NOT
@@ -248,7 +248,7 @@ WebPMuxError WebPMuxPushFrame(WebPMux* mux, in WebPMuxFrameInfo* frame, int copy
 //   WEBP_MUX_BAD_DATA - if nth frame chunk in mux is invalid.
 //   WEBP_MUX_MEMORY_ERROR - on memory allocation error.
 //   WEBP_MUX_OK - on success.
-WebPMuxError WebPMuxGetFrame(in WebPMux* mux, uint nth, WebPMuxFrameInfo* frame);
+WebPMuxError WebPMuxGetFrame(const WebPMux* mux, uint nth, WebPMuxFrameInfo* frame);
 
 // Deletes a frame from the mux object.
 // nth=0 has a special meaning - last position.
@@ -285,7 +285,7 @@ struct WebPMuxAnimParams
 //   WEBP_MUX_INVALID_ARGUMENT - if mux or params is NULL.
 //   WEBP_MUX_MEMORY_ERROR - on memory allocation error.
 //   WEBP_MUX_OK - on success.
-WebPMuxError WebPMuxSetAnimationParams(WebPMux* mux, in WebPMuxAnimParams* params);
+WebPMuxError WebPMuxSetAnimationParams(WebPMux* mux, const WebPMuxAnimParams* params);
 
 // Gets the animation parameters from the mux object.
 // Parameters:
@@ -295,7 +295,7 @@ WebPMuxError WebPMuxSetAnimationParams(WebPMux* mux, in WebPMuxAnimParams* param
 //   WEBP_MUX_INVALID_ARGUMENT - if mux or params is NULL.
 //   WEBP_MUX_NOT_FOUND - if ANIM chunk is not present in mux object.
 //   WEBP_MUX_OK - on success.
-WebPMuxError WebPMuxGetAnimationParams(in WebPMux* mux, WebPMuxAnimParams* params);
+WebPMuxError WebPMuxGetAnimationParams(const WebPMux* mux, WebPMuxAnimParams* params);
 
 //------------------------------------------------------------------------------
 // Misc Utilities.
@@ -329,7 +329,7 @@ WebPMuxError WebPMuxSetCanvasSize(WebPMux* mux, int width, int height);
 //   WEBP_MUX_INVALID_ARGUMENT - if mux, width or height is NULL.
 //   WEBP_MUX_BAD_DATA - if VP8X/VP8/VP8L chunk or canvas size is invalid.
 //   WEBP_MUX_OK - on success.
-WebPMuxError WebPMuxGetCanvasSize(in WebPMux* mux, int* width, int* height);
+WebPMuxError WebPMuxGetCanvasSize(const WebPMux* mux, int* width, int* height);
 
 // Gets the feature flags from the mux object.
 // Note: This method assumes that the VP8X chunk, if present, is up-to-date.
@@ -344,7 +344,7 @@ WebPMuxError WebPMuxGetCanvasSize(in WebPMux* mux, int* width, int* height);
 //   WEBP_MUX_INVALID_ARGUMENT - if mux or flags is NULL.
 //   WEBP_MUX_BAD_DATA - if VP8X/VP8/VP8L chunk or canvas size is invalid.
 //   WEBP_MUX_OK - on success.
-WebPMuxError WebPMuxGetFeatures(in WebPMux* mux, uint* flags);
+WebPMuxError WebPMuxGetFeatures(const WebPMux* mux, uint* flags);
 
 // Gets number of chunks with the given 'id' in the mux object.
 // Parameters:
@@ -354,7 +354,7 @@ WebPMuxError WebPMuxGetFeatures(in WebPMux* mux, uint* flags);
 // Returns:
 //   WEBP_MUX_INVALID_ARGUMENT - if mux, or num_elements is NULL.
 //   WEBP_MUX_OK - on success.
-WebPMuxError WebPMuxNumChunks(in WebPMux* mux, WebPChunkId id, int* num_elements);
+WebPMuxError WebPMuxNumChunks(const WebPMux* mux, WebPChunkId id, int* num_elements);
 
 // Assembles all chunks in WebP RIFF format and returns in 'assembled_data'.
 // This function also validates the mux object.
@@ -436,7 +436,7 @@ int WebPAnimEncoderOptionsInit(WebPAnimEncoderOptions* enc_options) {
 }
 
 // Internal, version-checked, entry point.
-WebPAnimEncoder* WebPAnimEncoderNewInternal(int, int, in WebPAnimEncoderOptions*, int);
+WebPAnimEncoder* WebPAnimEncoderNewInternal(int, int, const WebPAnimEncoderOptions*, int);
 
 // Creates and initializes a WebPAnimEncoder object.
 // Parameters:
@@ -447,7 +447,7 @@ WebPAnimEncoder* WebPAnimEncoderNewInternal(int, int, in WebPAnimEncoderOptions*
 //   A pointer to the newly created WebPAnimEncoder object.
 //   Or NULL in case of memory error.
 WebPAnimEncoder* WebPAnimEncoderNew(int width, int height,
-        in WebPAnimEncoderOptions* enc_options) {
+        const WebPAnimEncoderOptions* enc_options) {
   return WebPAnimEncoderNewInternal(width, height, enc_options,
                                     WEBP_MUX_ABI_VERSION);
 }
@@ -471,7 +471,7 @@ WebPAnimEncoder* WebPAnimEncoderNew(int width, int height,
 //   On error, returns false and frame->error_code is set appropriately.
 //   Otherwise, returns true.
 int WebPAnimEncoderAdd(WebPAnimEncoder* enc, WebPPicture* frame,
-        int timestamp_ms, in WebPConfig* config);
+        int timestamp_ms, const WebPConfig* config);
 
 // Assemble all frames added so far into a WebP bitstream.
 // This call should be preceded by  a call to 'WebPAnimEncoderAdd' with

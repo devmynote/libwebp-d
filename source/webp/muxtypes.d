@@ -73,7 +73,7 @@ void WebPDataClear(WebPData* webp_data) {
 
 // Allocates necessary storage for 'dst' and copies the contents of 'src'.
 // Returns true on success.
-int WebPDataCopy(in WebPData* src, WebPData* dst) {
+int WebPDataCopy(const WebPData* src, WebPData* dst) {
   if (src == null || dst == null) return 0;
   WebPDataInit(dst);
   if (src.bytes != null && src.size != 0) {
