@@ -1,7 +1,7 @@
 {
 	"name": "libwebp-d",
-	"description": "D bindings for WebP",
-	"license": "BSD 3-clause",
+	"description": "D bindings for WebP library",
+	"license": "BSL-1.0",
 	"homepage": "https://github.com/devmynote/libwebp-d",
 	"authors": [
 		"devmynote"
