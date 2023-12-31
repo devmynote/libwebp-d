@@ -6,11 +6,11 @@
 	"authors": ["devmynote"],
 	"libs-windows": ["libwebp", "libwebpdemux", "libwebpmux"],
 	"lflags-windows-x86_64": [
-		"/LIBPATH:$PACKAGE_DIR\\libwin"
+		"/LIBPATH:$PACKAGE_DIR\\lib\\win"
 	],
-	"libs-posix":   ["libwebp", "libwebpdemux", "libwebpmux", "libsharpyuv"],
+	"libs-posix":   ["webp", "webpdemux", "webpmux", "sharpyuv"],
 	"lflags-posix": [
-		"-L$PACKAGE_DIR/lib"
+		"-L$PACKAGE_DIR/lib/posix"
 	],
 	"targetType": "sourceLibrary",
 	"dependencies": {
